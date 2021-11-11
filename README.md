@@ -1,6 +1,7 @@
 # RealTime Monitor of Django+Plotly Streaming
 
 DjangoとPlotlyで加速度情報のリアルタイムモニターを作成
+
 加速度情報は以下の項目のCSV
 - Unixtime(秒数,ミリ秒は小数点で指定)
 - 加速度x
@@ -10,8 +11,8 @@ DjangoとPlotlyで加速度情報のリアルタイムモニターを作成
 CSVに追記していくと、最終行を取得してグラフに追加表示される。
 
 ### Reference
-https://docs.djangoproject.com/ja/3.2/
-https://plotly.com/javascript/streaming/
+- Django　https://docs.djangoproject.com/ja/3.2/
+- Plotly Streaming https://plotly.com/javascript/streaming/
 
 ### Need
 - python 3.7.1
@@ -46,6 +47,7 @@ $ python manage.py runserver 0.0.0.0:8000
 
 ### Usage
 ブラウザで以下にアクセス
+
 http://127.0.0.1:8000/
 
 - 表示開始
