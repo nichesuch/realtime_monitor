@@ -1,0 +1,138 @@
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="title"><h1>地震計をリアルタイム描画</h1></div>
+データ取得間隔 <input type="number" id="interval" value="{{interval}}"/> ms 
+データ表示範囲 <input type="number" id="range" value="{{range}}"/> ms 
+<button id="start" onclick="start()">Start</button>
+<button id="stop"  onclick="stop()">Stop</button>
+<div class="graph" id="myDiv"></div>
+
+<script>
+    var trace1 = {
+        x: [],
+        y: [],
+        name: 'x',
+        mode: 'lines',
+        line: {
+            color: '#80CAF6',
+        }
+    }
+
+    var trace2 = {
+        x: [],
+        y: [],
+        name: 'y',
+        xaxis: 'x2',
+        yaxis: 'y2',
+        mode: 'lines',
+        line: {color: '#DF56F1'}
+    };
+
+    var trace3 = {
+        x: [],
+        y: [],
+        name: 'z',
+        xaxis: 'x3',
+        yaxis: 'y3',
+        mode: 'lines',
+        line: {color: '#444444'}
+    };
+
+    var layout = {
+        height: 800,
+        xaxis: {
+            type: 'date',
+            domain: [0, 1],
+        },
+        yaxis: {domain: [0, 0.3]},
+        xaxis2: {
+            type: 'date',
+            anchor: 'y2',
+            domain: [0, 1]
+        },
+        yaxis2: {
+            anchor: 'x2',
+            domain: [0.35, 0.65]
+        },
+        xaxis3: {
+            type: 'date',
+            anchor: 'y3',
+            domain: [0, 1]
+        },
+        yaxis3: {
+            anchor: 'x3',
+            domain: [0.7,1]
+        },    
+    }
+
+    var data = [trace1,trace2,trace3];
+
+    Plotly.newPlot('myDiv', data, layout);
+
+    var cnt;
+    var interval;
+
+    function start(){
+        cnt = 0;
+        console.log("start");
+        let interval_msec = document.getElementById("interval").value;
+        let range = document.getElementById("range").value;
+        console.log("interval="+interval_msec);
+        if(interval) clearInterval(interval);
+        interval = setInterval(function() {
+            var time = new Date();
+            $.get("/data", {},
+                function(data){
+                    let list = data.split(',');
+                    time = new Date(list[0] * 1000);
+                    let data_x = list[1];
+                    let data_y = list[2];
+                    let data_z = list[3];
+                    let update = {
+                        x:  [[time], [time], [time]],
+                        y: [[data_x],[data_y], [data_z]]
+                    };
+
+                    let nowTime = new Date(time.getTime());
+                    let olderTime = new Date(time.getTime() - range);
+                    
+                    let minuteView = {
+                        xaxis: {
+                            type: 'date',
+                            range: [olderTime,nowTime]
+                        },
+                        xaxis2: {
+                            anchor: 'x2',
+                            type: 'date',
+                            range: [olderTime,nowTime]
+                        },
+                        xaxis3: {
+                            anchor: 'x3',
+                            type: 'date',
+                            range: [olderTime,nowTime]
+                        }
+                    };
+                    
+                    
+                    Plotly.relayout('myDiv', minuteView);
+                    Plotly.extendTraces('myDiv', update, [0,1,2]);
+                }
+            );
+            if(cnt % 100 == 0) console.log(time.getTime());
+            if(++cnt === 10000) clearInterval(interval);
+        }, interval_msec);        
+    }
+
+    function stop(){
+        console.log("stop");
+        clearInterval(interval);
+    }
+
+
+</script>
+    
+{% endblock %}
