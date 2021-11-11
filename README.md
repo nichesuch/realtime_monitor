@@ -9,6 +9,10 @@ DjangoとPlotlyで加速度情報のリアルタイムモニターを作成
 
 CSVに追記していくと、最終行を取得してグラフに追加表示される。
 
+### Reference
+https://docs.djangoproject.com/ja/3.2/
+https://plotly.com/javascript/streaming/
+
 ### Need
 - python 3.7.1
 - pip 21.3.1
