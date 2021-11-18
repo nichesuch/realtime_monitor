@@ -48,6 +48,8 @@ MONITOR_INTERVAL_MSEC = 1000 #モニタの更新頻度(ミリ秒数)　初期値
 
 ### 実行
 ```
-$ cd website
-$python3 manage.py runserver 0.0.0.0:8000
+$ cd realtime_monitor
+$ . .env/bin/activate
+(.env) $ cd website
+(.env) $ python3 manage.py runserver 0.0.0.0:8000
 ```
