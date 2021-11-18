@@ -87,19 +87,26 @@
             var time = new Date();
             $.get("/data", {},
                 function(data){
-                    let list = data.split(',');
-                    time = new Date(list[0] * 1000);
-                    let data_x = list[1];
-                    let data_y = list[2];
-                    let data_z = list[3];
-                    let update = {
-                        x:  [[time], [time], [time]],
-                        y: [[data_x],[data_y], [data_z]]
-                    };
+                    let lines = data.split('\n');
+                    let nowTime;
+                    let olderTime;
+                    for(line of lines) {
+                        if(line.length == 0) return;
+	                    let list = line.split(',');
+	                    time = new Date(list[0] * 1000);
+	                    let data_x = list[1];
+	                    let data_y = list[2];
+	                    let data_z = list[3];
+	                    let update = {
+	                        x:  [[time], [time], [time]],
+	                        y: [[data_x],[data_y], [data_z]]
+	                    };
 
-                    let nowTime = new Date(time.getTime());
-                    let olderTime = new Date(time.getTime() - range);
-                    
+	                    nowTime = new Date(time.getTime());
+	                    olderTime = new Date(time.getTime() - range);
+	                    
+	                    Plotly.extendTraces('myDiv', update, [0,1,2]);
+                    }
                     let minuteView = {
                         xaxis: {
                             type: 'date',
@@ -119,7 +126,6 @@
                     
                     
                     Plotly.relayout('myDiv', minuteView);
-                    Plotly.extendTraces('myDiv', update, [0,1,2]);
                 }
             );
             if(cnt % 100 == 0) console.log(time.getTime());

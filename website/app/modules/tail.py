@@ -1,9 +1,14 @@
 # 正規表現が使えるsplitを使う
 import re
 
-def tail(fn, n=None):
+def tail(fn, n=None, pointer=None):
+    now = None
+    # pointerを渡されたら、そこから先の行を返す
     # nを与えないときは最後の行だけ単体で返す
-    if n is None:
+    if pointer is not None:
+        n = 1
+        is_list = True
+    elif n is None:
         n = 1
         is_list = False
     # nは自然数
@@ -18,6 +23,14 @@ def tail(fn, n=None):
 
     # seek()はバイナリモード以外だと予期せぬ挙動を見せるので'rb'を指定する
     with open(fn, 'rb') as f:
+        if pointer is not None:
+            print(pointer)
+            now = f.seek(pointer)
+            chunk = f.read().decode()
+            chunk = chunk.strip()
+            now = f.tell()
+            print(chunk)
+            return chunk, now
         # ヘッダーを除いた左端の位置を探すために最初の一行(ヘッダーの行)を読む
         f.readline()
         # 一番最初の改行コードを左端(ファイルの末尾から読んでいったときの終端)とする
@@ -60,7 +73,7 @@ def tail(fn, n=None):
             line = chunk + line
 
             # readでまた進んでしまったのでまた先頭側にchunk_size移動する
-            f.seek(-chunk_size, 1)
+            now = f.seek(-chunk_size, 1)
 
             # 未読バイト数を更新する
             unread -= chunk_size
@@ -85,13 +98,16 @@ def tail(fn, n=None):
                     lines = re.split(r'\r?\n', line)
 
                     # 最後に後ろからn個取り出し, float型に変換して返す
-                    result = [list(map(float, line.split(','))) for line in lines[-n:]]
+                    #result = [list(map(float, line.split(','))) for line in lines[-n:]]
+                    
+                    # 最後のポインタ位置を取得
+                    now = f.seek(0, 2)
 
                     # nを指定しなかったときは最後の一行を単体で返す
                     if not is_list:
-                        return result[-1]
+                        return lines[-1], now
                     else:
-                        return result
+                        return lines, now
 
 if __name__ == '__main__':
     print("tail module")

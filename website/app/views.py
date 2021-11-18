@@ -17,18 +17,19 @@ class LineChartsView(TemplateView):
         context["interval"] = settings.MONITOR_INTERVAL_MSEC
         return context
 
-
-def data_api():
-    if(settings.SAMPLE_DATA):
-        return time.time(), random.random(),random.random(),random.random()
-    else:
-        return t.tail(settings.LOG_FILE_PATH)
-    
-
 class DataApi(TemplateView):
     template_name = "api.html"
 
+    def data_api(self, request):
+        if(settings.SAMPLE_DATA):
+            return time.time(), random.random(),random.random(),random.random()
+        else:
+            seek_pointer = request.session.get('seek_pointer', None)
+            data, seek_pointer = t.tail(settings.LOG_FILE_PATH, pointer=seek_pointer)
+            request.session['seek_pointer'] = seek_pointer
+            return data
+
     def get_context_data(self, **kwargs):
         context = super(DataApi, self).get_context_data(**kwargs)
-        context["time"],context["x"],context["y"],context["z"] = data_api()
+        context["data"] = self.data_api(self.request)
         return context
