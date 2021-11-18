@@ -30,6 +30,8 @@ $ pip install -r requirements.txt
 `website/website/settings.py`
 
 ```
+ALLOWED_HOSTS = ['999.999.999.999'] #ラズベリーパイのIPアドレス
+
 LOG_FILE_PATH = '/tmp/sample.log' #ログファイルのパス
 SAMPLE_DATA = True #ログではなくダミーデータを表示
 MONITOR_RANGE_MSEC = 12000 #モニタに表示する範囲(ミリ秒数) 初期値
