@@ -14,6 +14,10 @@ CSVに追記していくと、最終行を取得してグラフに追加表示�
 - Django　https://docs.djangoproject.com/ja/3.2/
 - Plotly Streaming https://plotly.com/javascript/streaming/
 
+### for Raspberry Pi
+Raspberry Piで動かしたい方は[こちら](/RasperryPi.md)。
+
+
 ### Need
 - python 3.7.1
 - pip 21.3.1
@@ -30,7 +34,7 @@ $ pip install -r requirements.txt
 `website/website/settings.py`
 
 ```
-ALLOWED_HOSTS = ['999.999.999.999'] #ラズベリーパイのIPアドレス
+ALLOWED_HOSTS = ['999.999.999.999'] #動かす環境のIPアドレス
 
 LOG_FILE_PATH = '/tmp/sample.log' #ログファイルのパス
 SAMPLE_DATA = True #ログではなくダミーデータを表示
