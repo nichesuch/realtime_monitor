@@ -15,7 +15,7 @@ CSVに追記していくと、最終行を取得してグラフに追加表示�
 - Plotly Streaming https://plotly.com/javascript/streaming/
 
 ### for Raspberry Pi
-Raspberry Piで動かしたい方は[こちら](/RasperryPi.md)。
+Raspberry Piで動かしたい方は[こちら](/RaspberryPi.md)。
 
 
 ### Need
